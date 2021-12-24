@@ -3,14 +3,20 @@
 // TermFetch - a terminal application used to get various system information.
 // developer: Kian Heitkamp
 // email: kianheitkamp@outlook.com
-//
-// language: C++
-// C++ version: c++20
-// compiler: gcc
-// platform win32 (Windows)
+
+/*
+language: C++
+C++ version: c++20
+compiler: g++
+platform win32 (Windows)
+to compile:
+
+> g++ termfetch.cpp -o termfetch --static --std=c++20
+*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include <conio.h>
 #include <windows.h>
 #include <string>
 #include <iostream>
