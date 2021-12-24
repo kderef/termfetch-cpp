@@ -1,8 +1,6 @@
-#include <iostream>
-#include <conio.h>
 #include "lib.h"
 
-void check(int option)
+void check(const int option)
 {
     if (option == 27 || option == 3) // 27 = escape | 3 = CTRL+C
     {
