@@ -259,14 +259,13 @@ namespace Speedtest
             if (!confirmation)
                 return;
         }
-        cout << '\n' << COLOR_YELLOW << "downloading file...";
+        cout << '\n' << COLOR_YELLOW << "downloading file...\n";
 
-        system("powershell.exe -command 'Invoke-WebRequest -Uri \"https://github.com/x-kvoid-x/termfetch-cpp/releases/download/production/speedtest-cli.exe\" -OutFile \"~\\Documents\\_speedtest.exe\" >$null'");
-        
-        cout << COLOR_GREEN << "done\n";
+        system("powershell.exe -command \"Invoke-WebRequest -Uri 'https://github.com/x-kvoid-x/termfetch-cpp/releases/download/production/librespeed-cli.exe' -OutFile speedtest.exe\"");
+        Sleep(1500);
         cout << COLOR_YELLOW << "running script..." << COLOR_WHITE << "\n\n";
 
-        system("C:\\Users\\%USERNAME%\\Documents\\_speedtest.exe");
+        system("_speedtest.exe");
 
         Util::reset_colors(true);
 
