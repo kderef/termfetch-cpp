@@ -125,8 +125,8 @@ namespace Util
     bool ask_yesno(const char *prompt)
     {
         cout << prompt;
-        const int response = getchar();
-        if (response == 121)
+        const int response = getch();
+        if (response == 121 || response == 89)
             return true;
         else
             return false;
@@ -259,13 +259,8 @@ namespace Speedtest
             if (!confirmation)
                 return;
         }
-        cout << '\n' << COLOR_YELLOW << "downloading file...\n";
 
-        system("powershell.exe -command \"Invoke-WebRequest -Uri 'https://github.com/x-kvoid-x/termfetch-cpp/releases/download/production/librespeed-cli.exe' -OutFile speedtest.exe\"");
-        Sleep(1500);
-        cout << COLOR_YELLOW << "running script..." << COLOR_WHITE << "\n\n";
-
-        system("_speedtest.exe");
+        system("terfmetch-speedtest.exe");
 
         Util::reset_colors(true);
 
