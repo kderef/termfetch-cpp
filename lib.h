@@ -251,70 +251,6 @@ namespace Hardware
 
 namespace Speedtest
 {
-    void create_script(string filename = "speedtest.ps1")
-    {
-        std::fstream file;
-
-        const string lines[22] = {
-            "$iPerfDownload = \"https://iperf.fr/download/windows/iperf-3.1.3-win64.zip\"",
-            "$DownloadLocation = Join-Path $env:TEMP \"iperf.zip\"",
-            "$iPerfPath = Join-Path $env:TEMP \"iperf\"",
-            "if (!(Test-Path $iPerfPath)) {",
-            "  Invoke-WebRequest -Uri $iPerfDownload -OutFile $DownloadLocation",
-            "  Expand-Archive -Path $DownloadLocation -DestinationPath $iPerfPath",
-            "}",
-            "Set-Location (Join-Path $iPerfPath \"iperf-3.1.3-win64\")",
-            "$Download = & .\\iperf3.exe --client iperf.cageops.com --port 5210 --parallel 10 --reverse",
-            "if (($Download | Select-Object -Last 1) -eq \"iperf Done.\") {",
-            "  Write-Host \"Download Speed\"",
-            "  $Download | Select-Object -Last 4 | Select-Object -First 2 | Write-Host",
-            "} else {",
-            "  Write-Host \"iPerf failed to get download speed.\"",
-            "}",
-            "$Upload = & .\\iperf3.exe --client iperf.cageops.com --port 5210 --parallel 10",
-            "if (($Upload | Select-Object -Last 1) -eq \"iperf Done.\") {",
-            "  Write-Host \"Upload Speed\"",
-            "  $Upload | Select-Object -Last 4 | Select-Object -First 2 | Write-Host",
-            "} else {",
-            "  Write-Host \"iPerf failed to get upload speed.\"",
-            "}"};
-
-        file.open(filename, std::ios_base::out);
-        if (file.is_open())
-        {
-            for (int i = 0; i < 22; i++)
-            {
-                file << lines[i] << '\n';
-            }
-            file.close();
-        }
-    }
-    float avg_dwn_speed, avg_upl_speed;
-    void thread_run_file()
-    {
-        string s = Util::output_from("powershell.exe -command \"& .\\speedtest.ps1\"");
-        //system("powershell.exe -command \"& .\\speedtest.ps1\"");
-        vector<string> splitlines = Util::split(s, '\n');
-        string dwn_spd_usr = splitlines[1].erase(0, 37).erase(30, splitlines[1].length() - 1);
-        string dwn_spd_hst = splitlines[2].erase(0, 37).erase(30, splitlines[2].length() - 1);
-
-        string upl_spd_usr = splitlines[4].erase(0, 37).erase(30, splitlines[4].length() - 1);
-        string upl_spd_hst = splitlines[5].erase(0, 37).erase(30, splitlines[5].length() - 1);
-
-#ifdef DEBUG
-        cout << s << "\n\n";
-
-        cout << dwn_spd_usr << '\n';
-        cout << dwn_spd_hst << '\n';
-        cout << upl_spd_usr << '\n';
-        cout << upl_spd_hst << '\n';
-#endif
-
-        avg_dwn_speed = (stoi(dwn_spd_usr) + stoi(dwn_spd_hst)) / 2;
-        avg_upl_speed = (stoi(upl_spd_usr) + stoi(upl_spd_hst)) / 2;
-
-        thread_finished = true;
-    }
     void perform_speedtest(bool ask_confirm = false)
     {
         if (ask_confirm)
@@ -323,27 +259,15 @@ namespace Speedtest
             if (!confirmation)
                 return;
         }
+        cout << '\n' << COLOR_YELLOW << "downloading file...";
 
-        cout << COLOR_YELLOW;
-        create_script(); // create "speedtest.ps1"
+        system("powershell.exe -command 'Invoke-WebRequest -Uri \"https://github.com/x-kvoid-x/termfetch-cpp/releases/download/production/speedtest-cli.exe\" -OutFile \"~\\Documents\\_speedtest.exe\" >$null'");
+        
+        cout << COLOR_GREEN << "done\n";
+        cout << COLOR_YELLOW << "running script..." << COLOR_WHITE << "\n\n";
 
-        thread speedtest_thread(thread_run_file);
-        speedtest_thread.detach();
-        cout << '\n';
+        system("C:\\Users\\%USERNAME%\\Documents\\_speedtest.exe");
 
-        for (int i = 0; i < 30; i++)
-        {
-            cout << "testing internet speed...   [" << i + 1 << "/30]\r";
-            Sleep(1000);
-        }
-
-        cout << '\n';
-        while (!thread_finished) // wait until thread is finished
-        {
-        }
-
-        cout << "\naverage download speed: " << avg_dwn_speed << "mb/s\n";
-        cout << "average upload speed: " << avg_upl_speed << "mb/s\n";
         Util::reset_colors(true);
 
         pause();
