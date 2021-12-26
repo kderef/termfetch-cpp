@@ -3,4 +3,4 @@ termfetch, but written in C++
 
 **to compile:**
 
-g++ termfetch.cpp -o termfetch.exe --static --std=c++2
+g++ termfetch.cpp -o termfetch.exe --static --std=c++20
