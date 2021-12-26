@@ -347,26 +347,6 @@ namespace Speedtest
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void __thread_run_file()
-/* deprecated */
-{
-    string output = Util::output_from("powershell.exe -command \"& .\\speedtest.ps1\"", true);
-    vector<string> splitlines = Util::split(output, '\n');
-    string dwn_spd_usr = Util::split(splitlines[1], ' ')[4];
-    string dwn_spd_hst = Util::split(splitlines[2], ' ')[4];
-
-    string upl_spd_usr = Util::split(splitlines[4], ' ')[4];
-    string upl_spd_hst = Util::split(splitlines[5], ' ')[4];
-
-    float avg_dwn_speed = (stoi(dwn_spd_usr) + stoi(dwn_spd_hst)) / 2;
-    float avg_upl_speed = (stoi(upl_spd_usr) + stoi(upl_spd_hst)) / 2;
-
-    cout << COLOR_GREEN << "average download speed: " << avg_dwn_speed << "mb/s\n";
-    cout << COLOR_GREEN << "average upload speed: " << avg_upl_speed << "mb/s\n";
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 namespace Network
 {
     string internal_ip4()
