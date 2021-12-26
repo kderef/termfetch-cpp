@@ -32,13 +32,15 @@ to compile:
 
 using std::cin;
 using std::cout;
+using std::exception;
 using std::getline;
 using std::stoi;
+using std::stoll;
 using std::string;
 using std::stringstream;
 using std::strtol;
+using std::thread;
 using std::vector;
-using std::exception;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -177,7 +179,7 @@ namespace Hardware
         string size_str = Util::output_from("wmic logicaldisk get size", true, 1);
         try
         {
-            val = round(std::stoll(size_str) / 1073741824);
+            val = round(stoll(size_str) / 1073741824);
         }
         catch (exception)
         {
@@ -193,7 +195,7 @@ namespace Hardware
         space_str.erase(remove(space_str.begin(), space_str.end(), ' '), space_str.end());
         try
         {
-            val = std::stoll(space_str) / 1073741824;
+            val = stoll(space_str) / 1073741824;
         }
         catch (exception)
         {
@@ -237,9 +239,9 @@ namespace Hardware
 
         usedspace = capacity - freespace;
 
-        cout << COLOR_GREEN << "capacity\t" << COLOR_BLUE << capacity << "GB" << '\n';
-        cout << COLOR_GREEN << "free space\t" << COLOR_BLUE << freespace << "GB" << '\n';
-        cout << COLOR_GREEN << "used space\t" << COLOR_BLUE << usedspace << "GB" << '\n';
+        cout << COLOR_GREEN << "  capacity\t" << COLOR_BLUE << capacity << "GB" << '\n';
+        cout << COLOR_GREEN << "  free space\t" << COLOR_BLUE << freespace << "GB" << '\n';
+        cout << COLOR_GREEN << "  used space\t" << COLOR_BLUE << usedspace << "GB" << '\n';
 
         Util::reset_colors();
     }
@@ -315,15 +317,17 @@ namespace Speedtest
     }
     void perform_speedtest(bool ask_confirm = false)
     {
-        if (ask_confirm) {
+        if (ask_confirm)
+        {
             bool confirmation = Util::ask_yesno("are you sure? (y/n): ");
-            if (!confirmation) return;
+            if (!confirmation)
+                return;
         }
-
 
         cout << COLOR_YELLOW;
         create_script(); // create "speedtest.ps1"
-        std::thread speedtest_thread(thread_run_file);
+
+        thread speedtest_thread(thread_run_file);
         speedtest_thread.detach();
         cout << '\n';
 
@@ -334,9 +338,10 @@ namespace Speedtest
         }
 
         cout << '\n';
-        while (!thread_finished)
+        while (!thread_finished) // wait until thread is finished
         {
         }
+
         cout << "\naverage download speed: " << avg_dwn_speed << "mb/s\n";
         cout << "average upload speed: " << avg_upl_speed << "mb/s\n";
         Util::reset_colors(true);
@@ -359,21 +364,32 @@ namespace Network
     string internal_ip6()
     {
         string output = Util::output_from(INT_IP6_COMMAND);
-        output.erase(output.length() - 1);
+        if (output[output.length() - 1] == '\n')
+        {
+            output.erase(output.length() - 1);
+        }
+
         return output;
     }
 
     string external_ip4()
     {
         string output = Util::output_from(EXT_IP4_COMMAND);
-        output.erase(output.length() - 1);
+        if (output[output.length() - 1] == '\n')
+        {
+            output.erase(output.length() - 1);
+        }
         return output;
     }
 
     string external_ip6()
     {
         string output = Util::output_from(EXT_IP6_COMMAND);
-        output.erase(output.length() - 1);
+        if (output[output.length() - 1] == '\n')
+        {
+            output.erase(output.length() - 1);
+        }
+
         return output;
     }
 
@@ -412,7 +428,7 @@ void show_hardware_info()
 
     cout << COLOR_YELLOW << "loading hardware info...\t[3/7]\r";
     _username = Hardware::username();
-    
+
     cout << COLOR_YELLOW << "loading hardware info...\t[4/7]\r";
     _ram = Hardware::ram();
 
