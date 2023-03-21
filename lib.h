@@ -22,7 +22,7 @@ to compile:
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include "math.h"
+#include <math.h>
 #include <assert.h>
 #include <array>
 #include <fstream>
