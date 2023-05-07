@@ -53,6 +53,15 @@ using std::vector;
 #define INT_IP4_COMMAND "powershell.exe -command (Test-Connection -ComputerName (hostname) -Count 1).IPV4Address.IPAddressToString"
 #define INT_IP6_COMMAND "powershell.exe -command (Test-Connection -ComputerName (hostname) -Count 1).IPV6Address.IPAddressToString"
 
+#define KEY_CTRL_C 3
+#define KEY_ESCAPE 27
+
+#define KEY_1 49
+#define KEY_2 50
+#define KEY_3 51
+#define KEY_4 52
+#define KEY_5 52
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define COLOR_RED "\033[91m"

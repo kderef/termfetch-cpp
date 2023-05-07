@@ -1,40 +1,42 @@
+#ifndef _WIN32
+# error "termfetch only supports windows."
+#endif
+
 #include "lib.h"
 
 void check(const int option)
 {
-    if (option == 27 || option == 3) // 27 = escape | 3 = CTRL+C
-    {
-        exit(0);
-    }
+    switch (option) {
+        case KEY_ESCAPE:
+        case KEY_CTRL_C:
+            exit(0);
+        
+        case KEY_1:
+            show_int_ip();
+            pause();
+            break;
+        
+        case KEY_2:
+            show_ext_ip();
+            pause();
+            break;
 
-    if (option == 49)
-    {
-        show_int_ip();
-        pause();
-    }
+        case KEY_3:
+            show_hardware_info();
+            pause();
+            break;
 
-    if (option == 50)
-    {
-        show_ext_ip();
-        pause();
-    }
+        case KEY_4:
+            Hardware::show_disk_info();
+            pause();
+            break;
 
-    if (option == 51)
-    {
-        show_hardware_info();
-        pause();
-    }
+        case KEY_5:
+            Speedtest::perform_speedtest(true);
+            break;
 
-    if (option == 52)
-    {
-        Hardware::show_disk_info();
-        pause();
-    }
-
-    if (option == 53)
-    {
-        Speedtest::perform_speedtest(true);
-        // pause();
+        default:
+            break;
     }
 }
 
@@ -48,6 +50,7 @@ int main(int argc, char *argv[])
     while (true)
     {
         system("cls");
+
         Util::reset_colors(true);
 
         cout << COLOR_GREEN << "  esc" << COLOR_CYAN << " -->" << COLOR_YELLOW << " exit" << '\n';
@@ -62,4 +65,6 @@ int main(int argc, char *argv[])
 
         check(choice);
     }
+
+    return 0;
 }
